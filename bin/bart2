@@ -1,0 +1,152 @@
+#!/usr/bin/env python
+
+"""Description: BART v1 main executable
+
+Copyright (c) 2017, 2018 Chongzhi Zang, Zhenjia Wang <zhenjia@virginia.edu>
+
+This code is free software; you can redistribute it and/or modify it 
+under the terms of the BSD License.
+
+@status: release candidate
+@version: $Id$
+@author: Chongzhi Zang, Zhenjia Wang
+@contact: zhenjia@virginia.edu
+"""
+
+import os,sys,argparse
+import configparser
+
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+try:
+    import bart2
+except:
+    sys.path.append(os.path.join(script_dir, "../"))
+    import bart2
+from bart2.main import bart
+bart2_version = bart2.__version__
+
+def prepare_argparser():
+    """
+    Prepare optparser object.
+    """    
+    description = '''%(prog)s -- Binding Analysis for Regulation of Transcription \n
+    BART predicts transcription factors (TFs) that function to regulate \n
+    a set of co-regulated genes or associate with a genomic binding profile \n
+    by leveraging a large collection of publicly available ChIP-seq data in \n
+    human and mouse.'''
+    epilog = "For command line options of each command, type: %(prog)s COMMAND -h"
+    
+    argparser = argparse.ArgumentParser( description = description, epilog = epilog )
+    argparser.add_argument("-v","--version", action="version", version="%(prog)s\t"+bart2_version)
+    subparsers = argparser.add_subparsers( dest = 'subcommand_name' )
+    
+    #command for 'geneset'
+    add_geneset_parser( subparsers )
+    
+    #command for 'profile'
+    add_profile_parser( subparsers )
+    
+    return argparser
+
+
+def add_output_option ( parser ):
+    parser.add_argument("--outdir", dest = "outdir", type = str, default = '',metavar = '<outdir>',
+                        help = "If specified, all output files will be written to that directory. Default: current working directory")
+    parser.add_argument( "-o", "--ofilename", dest = "ofilename", type = str, metavar = '<ofilename>',
+                               help = "Name string of output files. Default: the base name of the input file." )
+
+def add_tf_option(parser):
+    parser.add_argument("-t","--target", dest = "target", type = str,metavar = '<target>',
+                        help = "Target transcription factors of interests, please put each TF in one line. BART will generate extra plots showing prediction results for each TF.")
+
+def add_species_option(parser):
+    parser.add_argument('-s','--species',dest='species',type=str,metavar='<species>',choices = ['hg38','mm10'], required = True,
+                        help = 'Species, please choose from "hg38" or "mm10".')
+
+def add_norm_option(parser):
+    parser.add_argument('--nonorm',dest='nonorm', action = 'store_true',  default = False,
+                        help = 'Whether or not do the standardization for each TF by all of its Wilcoxon statistic scores in our compendium. If set, BART will not do the normalization. Default: FALSE.')
+
+def add_processes_option(parser):
+    parser.add_argument('-p','--processes',dest='processes', action='store', type=int, metavar = '<processes>', default=1,
+                        help = 'Number of CPUs BART will use.')
+    
+def add_geneset_parser( subparsers ):
+    """
+    Add main function 'geneset' argument parsers.
+    """
+    argparser_geneset = subparsers.add_parser("geneset", help="Given a query gene set or refseqID (at least 100 genes recommended), predict functional transcription factors that regulate these genes.")
+
+    # group for input files
+    group_input = argparser_geneset.add_argument_group( "Input files arguments" )
+    group_input.add_argument('-i', '--infile', action = 'store', type = str,dest = 'infile', required = True, 
+            help = 'Input file, with official gene symbol per line (default input). BART first selectes informative H3K27ac samples to generate the cis-regulatory profile, then based on the profile, predicts functional transcription factors that regulate them.', metavar = '<file>')
+
+    # if this option is given, meaning the input file is refseqID with 1/0 representing the target and un-target
+    group_input.add_argument('--refseq', dest='refseq', default=False, action='store_true', 
+            help = 'The input file should include 2 columns, one is the geneID (refseqID), and the other is 1/0, 1 for target and 0 for un-target.')
+
+    #group_input.add_argument('-n', '--outname', action = 'store', type = str,dest = 'outname', help = 'outdir of the final tf_auc files', metavar = '<dir>')
+    #group_input.add_argument('-d', '--divide', action = 'store', type = int,dest = 'divide', help = 'number of enhancer files run in a same time', metavar = '<divide>',default=0)
+    add_species_option(group_input)
+    add_tf_option(group_input)
+    # add_processes_option(group_input)
+    add_norm_option(group_input)
+        
+    # group for output files
+    group_output = argparser_geneset.add_argument_group( "Output arguments" )
+    add_output_option( group_output )    
+    #group_output.add_argument()
+    return
+    
+
+def add_profile_parser( subparsers ):
+    """
+    Add main function 'profile' argument parsers.
+    """
+    argparser_profile = subparsers.add_parser("profile", help="Given a ChIP-seq file (bed or bam format mapped reads), predict transcription factors whose binding pattern associates with the input ChIP-seq profile.")
+    #argparser_profile.add_argument()
+    #add_outdir_option(argparser_profile)
+    
+    # group for input files
+    group_input = argparser_profile.add_argument_group( "Input files arguments" )
+    group_input.add_argument('-i', '--infile', action = 'store', type = str,dest = 'infile', required = True, help = 'Input ChIP-seq bed or bam file.', metavar = '<file>')
+    group_input.add_argument('-f', '--format', action = 'store', type = str,dest = 'format', choices=('bed','bam'), required = True, help = 'Specify "bed" or "bam" format.', metavar = '<format>')
+    group_input.add_argument("-n", "--fragmentsize", action="store", type=int, dest="fragmentsize", help="Fragment size of ChIP-seq reads, in bps. Default: 150.", metavar="<int>",default=150)
+
+    #group_input.add_argument( '-s', action = 'store', type = str,dest = 'divide', help = 'number of enhancer files run in a same time', metavar = '<divide>',default=5)
+    add_species_option(group_input)
+    add_tf_option(group_input)
+    # add_processes_option(group_input)
+    add_norm_option(group_input)
+    
+    # group for output files
+    group_output = argparser_profile.add_argument_group( "Output arguments" )
+    add_output_option( group_output )    
+    #group_output.add_argument()
+
+    return
+  
+
+def main():
+    """
+    The Main function/pipeline for BART
+    """
+    # Parse options
+    argparser = prepare_argparser()
+    args = argparser.parse_args()
+    
+    if len(sys.argv)<2:
+        argparser.print_help()
+        exit(1)  
+
+    sys.stdout.write('\nBART -- Binding Analysis for Regulation of Transcription\n\n')
+    bart(args)
+
+if __name__=='__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.stderr.write('User interrupted me! :) Bye~\n')
+        sys.exit(0)

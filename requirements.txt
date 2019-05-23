@@ -1,0 +1,7 @@
+setuptools
+tables
+numpy
+pandas
+scipy
+matplotlib
+sklearn

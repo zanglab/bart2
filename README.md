@@ -202,7 +202,7 @@ BAM is a binary version of [Sequence Alignment/Map(SAM)](http://samtools.sourcef
 
 Given a non-overlapping bed file with score on 5th column, predict transcription factors whose binding pattern associates with the input profile.
 
-**Usage**: 	`bart region [-h] -i <file> [-n <int>] -s <species> [-t <target>] [-p <processes>] [--nonorm][--outdir <outdir>] [-o <ofilename>]`
+**Usage**: 	`bart region [-h] -i <file> -s <species> [-t <target>] [-p <processes>] [--nonorm][--outdir <outdir>] [-o <ofilename>]`
 
 #### Output files
 

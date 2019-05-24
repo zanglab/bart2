@@ -67,6 +67,8 @@ def opt_validate(options):
             options.normfile = data_dir+os.sep+'hg38_MSigDB.dat'
         elif options.subcommand_name == 'profile':
             options.normfile = data_dir+os.sep+'hg38_H3K27ac.dat'
+        elif options.subcommand_name == 'region':
+            options.normfile = data_dir+os.sep+'hg38_H3K27ac.dat'
 
     # === mm10 ===
     elif options.species == 'mm10': 
@@ -80,6 +82,8 @@ def opt_validate(options):
         if options.subcommand_name == 'geneset':
             options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
         elif options.subcommand_name == 'profile':
+            options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
+        elif options.subcommand_name == 'region':
             options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
 
     # used for generating cis-regulatory profile

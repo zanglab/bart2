@@ -46,6 +46,9 @@ def prepare_argparser():
     
     #command for 'profile'
     add_profile_parser( subparsers )
+
+    #command for 'profile'
+    add_region_parser( subparsers )
     
     return argparser
 
@@ -123,6 +126,30 @@ def add_profile_parser( subparsers ):
     
     # group for output files
     group_output = argparser_profile.add_argument_group( "Output arguments" )
+    add_output_option( group_output )    
+    #group_output.add_argument()
+
+def add_region_parser( subparsers ):
+    """
+    Add main function 'profile' argument parsers.
+    """
+    argparser_region = subparsers.add_parser("region", help="Given a non overlapping bed file with score on 5th column, predict transcription factors whose binding pattern associates with the input profile.")
+    #argparser_profile.add_argument()
+    #add_outdir_option(argparser_profile)
+    
+    # group for input files
+    group_input = argparser_region.add_argument_group( "Input files arguments" )
+    group_input.add_argument('-i', '--infile', action = 'store', type = str,dest = 'infile', required = True, help = 'Input six argument bed file.', metavar = '<file>')
+    group_input.add_argument("-n", "--fragmentsize", action="store", type=int, dest="fragmentsize", help="Fragment size of ChIP-seq reads, in bps. Default: 150.", metavar="<int>",default=150)
+
+    #group_input.add_argument( '-s', action = 'store', type = str,dest = 'divide', help = 'number of enhancer files run in a same time', metavar = '<divide>',default=5)
+    add_species_option(group_input)
+    add_tf_option(group_input)
+    # add_processes_option(group_input)
+    add_norm_option(group_input)
+    
+    # group for output files
+    group_output = argparser_region.add_argument_group( "Output arguments" )
     add_output_option( group_output )    
     #group_output.add_argument()
 

@@ -198,7 +198,11 @@ Bed is a tab-delimited text file that defines the data lines, and the BED file f
 
 BAM is a binary version of [Sequence Alignment/Map(SAM)](http://samtools.sourceforge.net) format, and for more information about BAM custom tracks, please click [here](https://genome.ucsc.edu/goldenPath/help/bam.html). 
 
+#### bart region
 
+Given a non-overlapping bed file with score on 5th column, predict transcription factors whose binding pattern associates with the input profile.
+
+**Usage**: 	`bart region [-h] -i <file> [-n <int>] -s <species> [-t <target>] [-p <processes>] [--nonorm][--outdir <outdir>] [-o <ofilename>]`
 
 #### Output files
 

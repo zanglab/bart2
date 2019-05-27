@@ -80,51 +80,51 @@ def get_bed_regions(bedfile,chroms):
 
 ######################
 #get value from bed file
-def add_region_score(chrom,outer,inner,score,regions):
-    '''
-    Add (unique) start-end in regions
-    '''
-    if chrom not in regions:
-        regions[chrom]={}
-    regions[chrom][inner] = {}# [],if do not require unique read
-    regions[chrom][inner][outer] = set()
-    regions[chrom][inner][outer].add(score)#append 
-    return regions  
+# def add_region_score(chrom,outer,inner,score,regions):
+#     '''
+#     Add (unique) start-end in regions
+#     '''
+#     if chrom not in regions:
+#         regions[chrom]={}
+#     regions[chrom][inner] = {}# [],if do not require unique read
+#     regions[chrom][inner][outer] = set()
+#     regions[chrom][inner][outer].add(score)#append 
+#     return regions  
 
-def get_bed_score(bedfile,species):
-    ''' 
-    Get tag regions from BED files 
-    '''  
-    chroms = hg38_chroms if species=='hg38' else mm10_chroms
+# def get_bed_score(bedfile,species):
+#     ''' 
+#     Get tag regions from BED files 
+#     '''  
+#     chroms = hg38_chroms if species=='hg38' else mm10_chroms
 
-    infile = open(bedfile,'r')
-    # 
-    try:
-        line = infile.readline()
-    except:
-        sys.stderr.write('Not a valid BED format of file: {} ! \n\n'.format(bedfile))
-        sys.exit(1)
-    regions = {} # plus strand
-    while line:
-        line = line.strip().split()
-        if line[0] in chroms and len(line)>=5:
-            chrom = line[0]
-            start = int(line[1])
-            end = int(line[2])
-            score = line[4]
-            #tag = BED(line[0],line[1],line[2],line[3],line[4],line[5])
-            #all start(outer) positions with same end(inner) are in a same set/list in plus strand
-            regions = add_region_score(chrom,start,end,score,regions)
-        else: #if the line dose not match the bed format
-            pass
-        line = infile.readline()
-    infile.close()
+#     infile = open(bedfile,'r')
+#     # 
+#     try:
+#         line = infile.readline()
+#     except:
+#         sys.stderr.write('Not a valid BED format of file: {} ! \n\n'.format(bedfile))
+#         sys.exit(1)
+#     regions = {} # plus strand
+#     while line:
+#         line = line.strip().split()
+#         if line[0] in chroms and len(line)>=5:
+#             chrom = line[0]
+#             start = int(line[1])
+#             end = int(line[2])
+#             score = line[4]
+#             #tag = BED(line[0],line[1],line[2],line[3],line[4],line[5])
+#             #all start(outer) positions with same end(inner) are in a same set/list in plus strand
+#             regions = add_region_score(chrom,start,end,score,regions)
+#         else: #if the line dose not match the bed format
+#             pass
+#         line = infile.readline()
+#     infile.close()
  
-    # check if tag info is read into regions  
-    if len(regions) == 0:
-        sys.stderr.write('File <{}> is not of a valid BED format! \n'.format(bedfile))
-        sys.exit(1)
-    return regions
+#     # check if tag info is read into regions  
+#     if len(regions) == 0:
+#         sys.stderr.write('File <{}> is not of a valid BED format! \n'.format(bedfile))
+#         sys.exit(1)
+#     return regions
 
 ###################
 

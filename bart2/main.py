@@ -2,7 +2,7 @@ import os,sys
 from types import SimpleNamespace
 
 # import from package
-from bart2 import OptValidator, ReadCount, RPRegress, EnhancerIdentifier, AUCcalc, StatTest, BedScore
+from bart2 import OptValidator, ReadCount, RPRegress, EnhancerIdentifier, AUCcalc, StatTest, score_on_UDHS
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 ADAPTIVE_LASSO_MAXSAMPLES = 20 # TODO: should we fix it?
@@ -103,7 +103,7 @@ def bart(options):
     elif args.subcommand_name == 'region':
         sys.stdout.write('Start mapping the bed score onto UDHS...\n')
         sys.stdout.flush()
-        counting = BedScore.score_on_DHS(args)
+        counting = score_on_UDHS.score_on_DHS(args)
         sys.stdout.write('Sorting scored UDHS...\n')
         sys.stdout.flush()
         positions = sorted(counting.keys(),key=counting.get,reverse=True)

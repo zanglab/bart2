@@ -272,6 +272,7 @@ def adaptive_lasso(x,y,samplefiles,name,maxsamples,ann,genenames):
     
     print('Run adaptive lasso for 10 rounds...')
     print('Round, Alpha, Features number ')
+    sys.stdout.flush()
     for k in range(n_lasso_iterations):
         if selected_features >maxsamples: 
             alpha=0.02
@@ -288,6 +289,7 @@ def adaptive_lasso(x,y,samplefiles,name,maxsamples,ann,genenames):
         weights = gprime(coef_)
         selected_features = len([i for i in coef_[0] if i !=0])
         print('{}, {}, {}'.format(k,alpha,selected_features))
+        sys.stdout.flush()
 
     rand_idx = list(range(x.shape[0]))
     random.shuffle( rand_idx )
@@ -317,6 +319,7 @@ def adaptive_lasso(x,y,samplefiles,name,maxsamples,ann,genenames):
     outf.write('AUC = {}\n'.format(auc))
     outf.write('best_cvs = {}\n'.format(best_cvs))
     outf.write('selected_features = {}\n'.format(selected_features))
+
     return auc,selected_features
 
 def main(args):
@@ -364,8 +367,6 @@ def main(args):
     try:
         auc,selected_features = adaptive_lasso(x,y,z.rpfiles,name,maxsamples,ann,genenames)
     except:
-        pass
-    finally:
         sys.stderr.write("""\nERROR: bart2 exited with errors!
 Please check whether you selected the correct species or uploaded the correct gene list!\n""")
         sys.exit(1)

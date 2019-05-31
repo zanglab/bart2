@@ -140,7 +140,7 @@ def add_region_parser( subparsers ):
     # group for input files
     group_input = argparser_region.add_argument_group( "Input files arguments" )
     group_input.add_argument('-i', '--infile', action = 'store', type = str,dest = 'infile', required = True, help = 'Input six argument bed file.', metavar = '<file>')
-    group_input.add_argument("-c", "--scorecol", action="store", type=int, dest="scorecol", help="Column in bed file with the score. Default: 5.", metavar="<int>",default=5)
+    group_input.add_argument("-c", "--scorecol", action="store", type=int, dest="scorecol", help="Column in bed file with the score. Starting with 1; default: 5.", metavar="<int>",default=5)
 
     #group_input.add_argument( '-s', action = 'store', type = str,dest = 'divide', help = 'number of enhancer files run in a same time', metavar = '<divide>',default=5)
     add_species_option(group_input)

@@ -64,11 +64,11 @@ def opt_validate(options):
 
         # file for standardization
         if options.subcommand_name == 'geneset':
-            options.normfile = data_dir+os.sep+'hg38_MSigDB.dat'
+            options.normfile = data_dir+os.sep+'bart2_hg38_MSigDB.dat'
         elif options.subcommand_name == 'profile':
-            options.normfile = data_dir+os.sep+'hg38_H3K27ac.dat'
+            options.normfile = data_dir+os.sep+'bart2_hg38_H3K27ac.dat'
         elif options.subcommand_name == 'region':
-            options.normfile = data_dir+os.sep+'hg38_H3K27ac.dat'
+            options.normfile = data_dir+os.sep+'bart2_hg38_H3K27ac.dat'
 
     # === mm10 ===
     elif options.species == 'mm10': 
@@ -80,22 +80,22 @@ def opt_validate(options):
         
         # file for standardization
         if options.subcommand_name == 'geneset':
-            options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
+            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
         elif options.subcommand_name == 'profile':
-            options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
+            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
         elif options.subcommand_name == 'region':
-            options.normfile = os.path.join(data_dir, 'mm10_H3K27ac.dat')
+            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
 
     # used for generating cis-regulatory profile
-    options.rp = data_dir+os.sep+options.species+'_RP.h5'
-    options.rpkm = data_dir+os.sep+options.species+'_UDHS_H3K27ac.h5'
-    options.tss = data_dir+os.sep+options.species+'_refseq_TSS.bed'
-    options.dhsfile = data_dir+os.sep+options.species+'_UDHS.bed'
-    options.desc = data_dir+os.sep+options.species+'_H3K27ac_Description.dat'
+    options.rp = data_dir+os.sep+'bart2_'+options.species+'_RP.h5'
+    options.rpkm = data_dir+os.sep+'bart2_'+options.species+'_UDHS_H3K27ac.h5'
+    options.tss = data_dir+os.sep+'bart2_'+options.species+'_refseq_TSS.bed'
+    options.dhsfile = data_dir+os.sep+'bart2_'+options.species+'_UDHS.bed'
+    options.desc = data_dir+os.sep+'bart2_'+options.species+'_H3K27ac_Description.dat'
 
     # used for BART AUC calculation
-    options.tffile = data_dir+os.sep+options.species+'_TF_file.json'
-    options.tfoverlap = data_dir+os.sep+options.species+'_TF_overlap.json'
+    options.tffile = data_dir+os.sep+'bart2_'+options.species+'_TF_file.json'
+    options.tfoverlap = data_dir+os.sep+'bart2_'+options.species+'_TF_overlap.json'
 
     return options
 

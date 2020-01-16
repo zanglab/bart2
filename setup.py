@@ -12,7 +12,7 @@ under the terms of the BSD License.
 '''
 import sys
 from setuptools import setup, find_packages
-import bart2
+import revised_bart
 
 with open("README.md", "rb") as f:
     long_descr = f.read().decode("utf-8")
@@ -26,8 +26,8 @@ def main():
         sys.stderr.write("CRITICAL: Python version must be higher than or equal to 3.0!\n")
         sys.exit(1)
         
-    setup(name="bart2",
-          version=bart2.__version__,
+    setup(name="revised_BART",
+          version=revised_bart.__version__,
           description="Binding Analysis for Regulatory Transcription Factors of Genes - Revised version",
           long_description=long_descr,
           author='Zhanjia Wang, Wenjing Ma',
@@ -47,7 +47,7 @@ def main():
                                 'mm10_library/*.h5',
                                 'mm10_library/mm10_test_data/*'],},
           # include_package_data=True,
-          scripts=['bin/bart2',],
+          scripts=['bin/revised_bart',],
           classifiers=[
               'Development Status :: 4 - Beta',
               'Environment :: Console',

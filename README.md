@@ -78,7 +78,8 @@ $ export PATH="/path/to/bart/bin/:$PATH"
 ```
 
 # Tutorial
-Positional arguments {geneset, profile, region}
+#### Positional arguments 
+`{geneset, profile, region}`
 
 #### bart geneset
 
@@ -123,7 +124,7 @@ is a rank of all TRs with multiple quantification scores.
 
 Please refer 
 <a href="http://bartweb.org/result?user_key=sample_15881335954485407" target="_blank">here</a>
-for a further example of BART2 results.
+for an example of BART2 results.
 
 
 # Citation

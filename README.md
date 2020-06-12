@@ -1,5 +1,15 @@
 
 README for BART(v2.0)
+===========
+
+Notes
+===========
+
+This is a standalone repository for the local command line version of BART (v2.0). For the source code of BART web interface, please refer to:
+- <a href="https://github.com/zanglab/BARTweb_frontend">**BARTweb Frontend**</a> for receiving users’ job submission requests and displaying job execution information and results. 
+- <a href="https://github.com/zanglab/BARTweb_backend">**BARTweb Backend**</a> for performing all of the computation.
+
+
 
 Introduction
 ============
@@ -11,6 +21,7 @@ BART is implemented in Python and distributed as an open-source package along wi
 BART web interface (Beta version) can be accessed <a href="http://bartweb.org/">here</a>.
 
 **BART is developed and maintained by the <a href="https://faculty.virginia.edu/zanglab/">Chongzhi Zang Lab</a> at the University of Virginia.**
+
 
 
 # Installation

@@ -1,14 +1,22 @@
 
-README for BART(v2.0)
+
+NOTES
 ===========
 
-Notes
-===========
+This is a standalone repository for the local command line version of BART (v2.0). 
 
-This is a standalone repository for the local command line version of BART (v2.0). For the source code of BART web interface, please refer to:
+For the source code of BART web interface, please refer to:
 - <a href="https://github.com/zanglab/BARTweb_frontend">**BARTweb Frontend**</a> for receiving users’ job submission requests and displaying job execution information and results. 
 - <a href="https://github.com/zanglab/BARTweb_backend">**BARTweb Backend**</a> for performing all of the computation.
 
+For the custom code for processing the data and generating the figures in the manuscript of **BARTweb: a web server for transcriptional regulator association analysis**, please refer to:
+- <a href="https://github.com/zanglab/BARTweb_custom_code">**BARTweb custom code**</a>
+
+
+
+
+README for BART(v2.0)
+===========
 
 
 Introduction

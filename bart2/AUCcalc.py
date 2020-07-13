@@ -22,7 +22,7 @@ def get_tf_file_data(tf_json):
     with open(tf_json, 'r') as fm:
         tf_file_map = json.load(fm)
     endtime = time.time()
-    sys.stdout.write("Loading tf file mapping list: {} seconds \n".format(endtime-starttime))
+    sys.stdout.write("Loading TR file mapping list: {} seconds \n".format(endtime-starttime))
     return tf_file_map
     
 # 84M memory taken
@@ -31,7 +31,7 @@ def get_matrix_data(overlap_json):
     with open(overlap_json, 'r') as fm:
         matrix_data = json.load(fm)
     endtime = time.time()
-    sys.stdout.write("Loading tf matrix file: {} seconds \n ".format(endtime-starttime))
+    sys.stdout.write("Loading TR matrix file: {} seconds \n ".format(endtime-starttime))
     return matrix_data
 
 def cal_auc_for_all_tfs(args, positions, matrix_data, tf_file_len):

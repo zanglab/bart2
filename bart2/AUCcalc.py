@@ -126,7 +126,7 @@ def cal_auc(args, positions):
     if len(positions) == 0:
         sys.stderr.write('Input file might not with right format!\n')
         sys.exit(1)
-    sys.stdout.write("Calculating ROC-AUC values for all transcription factors:\n\n")
+    sys.stdout.write("Calculating ROC-AUC values for all transcriptional regulators:\n\n")
 
     tf_dict = get_tf_file_data(tf_json)
     overlap_dict = get_matrix_data(overlap_json)

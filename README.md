@@ -50,16 +50,16 @@ BART uses Python's distutils tools for source installation. Before installing BA
 You have to download the Human or Mouse Data Library under your own directory before install BART. The unpacked libraries occupy 14GB hard drive storage in the download directory. 
 
 ```shell
-$ wget https://virginia.box.com/shared/static/byufe8n6ft47hs4q7l6xxhyqnifjohm8.gz -O hg38_library.tar.gz
-$ wget https://virginia.box.com/shared/static/bxli2cc6zfj7h1llt9vx9km9u0d4vwhc.gz -O mm10_library.tar.gz
+wget https://virginia.box.com/shared/static/byufe8n6ft47hs4q7l6xxhyqnifjohm8.gz -O hg38_library.tar.gz
+wget https://virginia.box.com/shared/static/bxli2cc6zfj7h1llt9vx9km9u0d4vwhc.gz -O mm10_library.tar.gz
 ```
 
 To install a source distribution of BART, unpack the distribution tarball and go to the directory where you unpacked BART.
 
 ```shell
-$ wget https://virginia.box.com/shared/static/031noe820hk888qzcxvw1cazol1gdhi0.gz -O bart_v2.0.tar.gz
-$ tar zxf bart_v2.0.tar.gz
-$ cd bart_v2.0
+wget https://virginia.box.com/shared/static/031noe820hk888qzcxvw1cazol1gdhi0.gz -O bart_v2.0.tar.gz
+tar zxf bart_v2.0.tar.gz
+cd bart_v2.0
 ```
 
 Modify the configure file (bart2/bart.conf). For example, if you download the hg38_library.tar.gz (and/or mm10_library.tar.gz) and unpack it under /path/to/data, then you can modify the bart.conf file as:
@@ -74,17 +74,17 @@ mm10_library_dir = /path/to/data/
 Install with root/administrator permission, or you have the <a href="https://docs.anaconda.com/anaconda/install/">Anaconda environment</a> prepared. By default, the script will install python library and executable codes globally.
 
 ```shell
-$ python setup.py install
+python setup.py install
 ```
 
 #### Local installation 
 If you want to install everything under a specific directory, for example, a directory as /path/to/bart2/, use the following commands.
 
 ```shell
-$ mkdir -p /path/to/bart/lib/pythonX.Y/site-packages 
-$ export PYTHONPATH=/path/to/bart/lib/pythonX.Y/site-packages/:$PYTHONPATH 
-$ python setup.py install --prefix /path/to/bart 
-$ export PATH=/path/to/bart/bin/:$PATH
+mkdir -p /path/to/bart/lib/pythonX.Y/site-packages 
+export PYTHONPATH=/path/to/bart/lib/pythonX.Y/site-packages/:$PYTHONPATH 
+python setup.py install --prefix /path/to/bart 
+export PATH=/path/to/bart/bin/:$PATH
 ```
 
 In this value, X.Y stands for the major–minor version of Python you are using (such as 3.5 ; you can find this with sys.version[:3] from a Python command line).
@@ -92,8 +92,8 @@ In this value, X.Y stands for the major–minor version of Python you are using 
 You’ll need to modify the environment variables and add those lines in your bash file (varies on each platform, usually is ~/.bashrc or ~/.bash_profile).
 
 ```shell
-$ export PYTHONPATH= "/path/to/bart/lib/pythonX.Y/site-packages/:$PYTHONPATH"
-$ export PATH="/path/to/bart/bin/:$PATH"
+export PYTHONPATH= "/path/to/bart/lib/pythonX.Y/site-packages/:$PYTHONPATH"
+export PATH="/path/to/bart/bin/:$PATH"
 ```
 
 # Tutorial

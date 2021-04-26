@@ -51,8 +51,8 @@ You have to download the Human or Mouse Data Library under your own directory be
 
 ```shell
 wget https://virginia.box.com/shared/static/byufe8n6ft47hs4q7l6xxhyqnifjohm8.gz -O hg38_library.tar.gz
-wget https://virginia.box.com/shared/static/bxli2cc6zfj7h1llt9vx9km9u0d4vwhc.gz -O mm10_library.tar.gz
 tar zxf hg38_library.tar.gz 
+wget https://virginia.box.com/shared/static/bxli2cc6zfj7h1llt9vx9km9u0d4vwhc.gz -O mm10_library.tar.gz
 tar zxf mm10_library.tar.gz
 ```
 
@@ -64,12 +64,12 @@ tar zxf bart_v2.0.tar.gz
 cd bart_v2.0
 ```
 
-Modify the configure file (bart2/bart.conf). For example, if you download the hg38_library.tar.gz (and/or mm10_library.tar.gz) and unpack it under /path/to/data, then you can modify the bart.conf file as:
+Modify the configure file (bart2/bart.conf). For example, if you have the hg38_library (or mm10_library) downloaded in this directory: /abc/def/hg38_library (or /abc/def/mm10_library), then the bart.conf file should read:
 
 ```shell
 [path]
-hg38_library_dir = /path/to/data/
-mm10_library_dir = /path/to/data/
+hg38_library_dir = /abc/def/
+mm10_library_dir = /abc/def/
 ```
 
 #### Global installation 

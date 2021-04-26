@@ -52,6 +52,8 @@ You have to download the Human or Mouse Data Library under your own directory be
 ```shell
 wget https://virginia.box.com/shared/static/byufe8n6ft47hs4q7l6xxhyqnifjohm8.gz -O hg38_library.tar.gz
 wget https://virginia.box.com/shared/static/bxli2cc6zfj7h1llt9vx9km9u0d4vwhc.gz -O mm10_library.tar.gz
+tar zxf hg38_library.tar.gz 
+tar zxf mm10_library.tar.gz
 ```
 
 To install a source distribution of BART, unpack the distribution tarball and go to the directory where you unpacked BART.

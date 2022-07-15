@@ -57,7 +57,7 @@ def stat_test(AUCs, tf_dict, statfile, normfile):
             tfs[tf].append(auc)
     
     cols = ['score','pvalue','max_auc','zscore','rank_score','rank_zscore','rank_pvalue','rank_auc','rank_avg_z_p','rank_avg_z_p_a','rank_avg_z_p_a_irwinhall_pvalue']
-    stat = pd.DataFrame(index = [tf for tf in tfs],columns = cols)
+    stat = pd.DataFrame(index = [tf for tf in tfs],columns = cols, dtype=object)
     for tf in tfs.keys():
         if len(tfs[tf])>0: # filter the tf with few samples
             stat_test = stats.ranksums(tfs[tf],sam1)

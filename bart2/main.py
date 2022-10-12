@@ -107,6 +107,7 @@ def bart(options):
         sys.stdout.write('Sorting scored UDHS...\n')
         sys.stdout.flush()
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
+        active_tag = sum(1 for i in list(counting.values()) if i > 0)
 
 
     '''
@@ -115,7 +116,7 @@ def bart(options):
     sys.stdout.write('BART Prediction starts...\n\nRank all DHS...\n')
     sys.stdout.flush()
 
-    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions)
+    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions, active_tag)
     sys.stdout.flush()
 
     stat_file = args.ofilename + '_bart_results.txt'

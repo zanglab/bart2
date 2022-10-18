@@ -42,51 +42,55 @@ def get_binding_count(binding_count_json):
     sys.stdout.write("Loading TR matrix file: {} seconds \n ".format(endtime-starttime))
     return bc_data
 
-def cal_auc_for_all_tfs(args, positions, active_tag, matrix_data, bc_data, tf_file_len):
+def cal_auc_for_all_tfs(args, positions, active_pos_count, matrix_data, bc_data, tf_file_len):
+    starttime0 = time.time()
     if args.subcommand_name == 'region':
-        print('region mode - active positions:'+str(active_tag))
-        active_positions = positions[0:(active_tag-1)]
+        print('region mode - active positions:'+str(active_pos_count))
+        active_positions = positions[0:active_pos_count]
 
         #step1: calculate the area units of active part
         starttime = time.time()
         print("region mode: step1...")
         tf_auc_ac = {}
-        height_final = {} #store for step2
-        loop_count=0
+        height = {}#final heights are for step2
+        tf_set = set(range(1, tf_file_len+1))
+        #initiation
         for i in range(1, tf_file_len+1):
-            height=0 #current height
-            col_area=[] # stores column areas on each x step
-            for j in active_positions:
-                if str(i) in matrix_data[str(positions[j])].strip().split():
-                    height+=1
-                else:
-                    col_area.append(height)
-            height_final[i] = height
-            tf_auc_ac[i] = sum(col_area)
+            height[i] = 0
+            tf_auc_ac[i] = 0
+        #calculate
+        loop_count=0
+        for i in active_positions:
+            tf_occur = set(matrix_data[str(i)].strip().split())
+            tf_occur = {int(t) for t in tf_occur }
+            for j in tf_set-tf_occur:
+                tf_auc_ac[j]+=height[j]
+            for j in tf_occur:
+                height[j]+=1
             loop_count+=1
-            if loop_count%100==0:
+            if loop_count%10000==0:
                 print(loop_count)
         endtime = time.time()
         sys.stdout.write("{} seconds \n".format(endtime-starttime))
 
         #step2: calculate the area units of incative part (trapezoid)
-        starttime = time.time()
+        #base1:height of step 1 base2:binding count height: 2.7M-binding count-x axis moves in step in
         print("region mode: step2...")
         tf_auc_inac = {}
         for i in range(1, tf_file_len+1):
-            tf_auc_inac[i]=(height_final[i]+bc_data[str(i)]) * (len(positions)-bc_data[str(i)]-active_tag) / 2
+            tf_auc_inac[i]=(height[i]+bc_data[str(i)]) * (len(positions)-bc_data[str(i)]-(active_pos_count-height[i])) / 2
         endtime = time.time()
-        sys.stdout.write("{} seconds \n".format(endtime-starttime))
 
         #step3: add two parts and divided by total count of units
-        starttime = time.time()
         print("region mode: step3...")
         tf_auc = {}
         for i in range(1, tf_file_len+1):
             tf_auc[i] = (tf_auc_ac[i] + tf_auc_inac[i]) / (bc_data[str(i)] * (len(positions)-bc_data[str(i)]))
         endtime = time.time()
-        sys.stdout.write("{} seconds \n".format(endtime-starttime))
-            
+
+        endtime0 = time.time()
+        sys.stdout.write("cal_auc_for_all_tfs takes {} seconds \n".format(endtime0-starttime0))
+        
     else:
         udhs_len = len(positions)
         groupsize = 10000   # 2.7M / 10000 = 272 steps

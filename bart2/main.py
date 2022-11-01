@@ -91,6 +91,7 @@ def bart(options):
 
         # get ranked score UDHS positions from enhancer profile
         positions = AUCcalc.get_position_list(enhancer_profile)
+        active_pos_count = len(positions)
 
     # bart profile [-h] <-i ChIP-seq profile> <-f format> <-s species> [-t target] [-p processes] [--outdir] [options]
     elif args.subcommand_name == 'profile':
@@ -99,6 +100,7 @@ def bart(options):
         counting = ReadCount.read_count_on_DHS(args)
         # get ranked score UDHS positions from read count
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
+        active_pos_count = sum(1 for i in list(counting.values()) if i > 0)
 
     elif args.subcommand_name == 'region':
         sys.stdout.write('Start mapping the bed score onto UDHS...\n')

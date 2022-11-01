@@ -10,7 +10,7 @@ def get_matrix_data(overlap_json):
     return matrix_data
 
 
-overlap_json='/project/zanglab_project/hz9fq/annotations/bart_library/hg38_library/bart2_hg38_TF_overlap.json'
+overlap_json='/project/zanglab_project/hz9fq/annotations/bart_library/mm10_library/bart2_mm10_TF_overlap.json'
 overlap_dict = get_matrix_data(overlap_json)
 
 lstring="".join(overlap_dict.values())
@@ -43,6 +43,6 @@ for i in range(1,tf_len):
 print(tf_len,len(tf_occurance))
 tf_binding_count[tf_len]=len(tf_occurance)
  
-with open("binding_count_hg38.json", "w") as outfile:
+with open("bart2_mm10_binding_count.json", "w") as outfile:
     json.dump(tf_binding_count, outfile)
 

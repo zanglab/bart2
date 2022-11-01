@@ -177,7 +177,7 @@ def cal_auc(args, positions, active_pos):
     tf_json = args.tffile
     overlap_json = args.tfoverlap
     normfile = args.normfile
-    binding_count_json = '/project/zanglab_project/hz9fq/scBART_project/bart2-test/binding_count/binding_count_hg38.json'
+    binding_count_json = args.bc
  
     # in case position index is not 'int' type
     positions = [int(i) for i in positions]

@@ -1,4 +1,4 @@
-import os,sys
+import os,sys,time
 from types import SimpleNamespace
 
 # import from package
@@ -109,7 +109,24 @@ def bart(options):
         sys.stdout.write('Sorting scored UDHS...\n')
         sys.stdout.flush()
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
-        active_pos_count = sum(1 for i in list(counting.values()) if i > 0)
+        # find tied intervals
+        starttime = time.time()
+        # tied_dict hold 0-initial start and end positions of tied intervals
+        tied_dict=dict()
+        interval_start=False
+        for i in range(0,len(positions)-1):
+            if interval_start==True:
+                if counting[positions[i]]==counting[positions[i+1]]:
+                    tied_dict[current_ptr]=i+1
+                else:
+                    interval_start=False
+            elif counting[positions[i]]==counting[positions[i+1]]:
+                interval_start=True
+                current_ptr=i
+                tied_dict[current_ptr]=i+1
+        endtime = time.time()
+        sys.stdout.write("{} seconds \n".format(endtime-starttime))
+        exit()
 
 
     '''

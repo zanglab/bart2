@@ -109,12 +109,12 @@ def bart(options):
         sys.stdout.write('Sorting scored UDHS...\n')
         sys.stdout.flush()
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
+        active_pos_count = sum(1 for i in list(counting.values()) if i > 0)
         # find tied intervals
-        starttime = time.time()
-        # tied_dict hold 0-initial start and end positions of tied intervals
+        # tied_dict held 0-initialize start and end positions of tied intervals
         tied_dict=dict()
         interval_start=False
-        for i in range(0,len(positions)-1):
+        for i in range(0,active_pos_count):
             if interval_start==True:
                 if counting[positions[i]]==counting[positions[i+1]]:
                     tied_dict[current_ptr]=i+1
@@ -124,9 +124,10 @@ def bart(options):
                 interval_start=True
                 current_ptr=i
                 tied_dict[current_ptr]=i+1
-        endtime = time.time()
-        sys.stdout.write("{} seconds \n".format(endtime-starttime))
-        exit()
+        tied_list=[]
+        for k in tied_dict.keys():
+            tied_list.append((k,tied_dict[k]))
+        print(tied_list)
 
 
     '''
@@ -135,7 +136,7 @@ def bart(options):
     sys.stdout.write('BART Prediction starts...\n\nRank all DHS...\n')
     sys.stdout.flush()
 
-    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions, active_pos_count)
+    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions, active_pos_count, tied_list)
     sys.stdout.flush()
 
     stat_file = args.ofilename + '_bart_results.txt'

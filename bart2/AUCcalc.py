@@ -42,11 +42,45 @@ def get_binding_count(binding_count_json):
     sys.stdout.write("Loading TR matrix file: {} seconds \n ".format(endtime-starttime))
     return bc_data
 
-def cal_auc_for_all_tfs(args, positions, active_pos_count, matrix_data, bc_data, tf_file_len):
+def cal_auc_for_all_tfs(args, positions, active_pos_count, tied_list, matrix_data, bc_data, tf_file_len):
     starttime0 = time.time()
     if args.subcommand_name == 'region':
         print('region mode - active positions:'+str(active_pos_count))
         active_positions = positions[0:active_pos_count]
+
+        #0-initialize bin intervals for estimation
+        est_bin_count=20
+        est_bin_size=active_pos_count//est_bin_count
+        est_bin_list=[]
+        for i in range(0,est_bin_count):
+            est_bin_list.append((i*est_bin_size, (i+1)*est_bin_size-1))
+        if active_pos_count%est_bin_count!=0:
+            est_bin_list.append((est_bin_count*est_bin_size,active_pos_count-1))
+        
+        #merge est bins and tied bins
+        #1) remove all tied bins contained by any est bin
+        tied_list_f1=[]
+        est_bin_remove=[]
+        for tb in tied_list:
+            if tb[0]//est_bin_size != tb[1]//est_bin_size:
+                tied_list_f1.append(tb)
+                (tb[1]//est_bin_size)-(tb[0]//est_bin_size) = bound_crossed
+        print(tied_list_f1)
+
+        #2) go through tied bins and estimate bins to merge them together
+        est_bin_list=sorted(est_bin_list)
+        tied_list_f1=sorted(tied_list_f1)
+
+        Out_of_tied=TRUE
+        current_ptr=0
+        final_bin_list=[]
+        #when out of a tied bin
+        if Out_of_tied=TRUE:
+            if tied_list_f1[0][0] <= est_bin_list[0][0]
+                final_bin_list.append((current_ptr,tied_list_f1[0][0]-1))
+                current_ptr=tied_list_f1[0][0]
+                
+
 
         #step1: calculate the area units of active part
         starttime = time.time()
@@ -173,7 +207,7 @@ def get_position_list(enhancerfile):
     fin.close()
     return sorted(score.keys(),key=score.get,reverse=True)
 
-def cal_auc(args, positions, active_pos):
+def cal_auc(args, positions, active_pos, tied_list):
     tf_json = args.tffile
     overlap_json = args.tfoverlap
     normfile = args.normfile
@@ -189,7 +223,7 @@ def cal_auc(args, positions, active_pos):
     tf_dict = get_tf_file_data(tf_json)
     overlap_dict = get_matrix_data(overlap_json)
     bc_dict = get_binding_count(binding_count_json)
-    tf_auc = cal_auc_for_all_tfs(args, positions, active_pos, overlap_dict, bc_dict, len(tf_dict))
+    tf_auc = cal_auc_for_all_tfs(args, positions, active_pos, tied_list, overlap_dict, bc_dict, len(tf_dict))
 
     auc_file = args.ofilename + '_auc.txt'
     # output file of AUC-ROC values for all TFs

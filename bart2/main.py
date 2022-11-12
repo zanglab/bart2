@@ -114,7 +114,7 @@ def bart(options):
         # tied_dict held 0-initialize start and end positions of tied intervals
         tied_dict=dict()
         interval_start=False
-        for i in range(0,active_pos_count):
+        for i in range(0,(len(positions)-1)):
             if interval_start==True:
                 if counting[positions[i]]==counting[positions[i+1]]:
                     tied_dict[current_ptr]=i+1
@@ -127,7 +127,6 @@ def bart(options):
         tied_list=[]
         for k in tied_dict.keys():
             tied_list.append((k,tied_dict[k]))
-        print(tied_list)
 
 
     '''

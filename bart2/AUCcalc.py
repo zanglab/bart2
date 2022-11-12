@@ -15,6 +15,7 @@ under the terms of the BSD License.
 
 import os,sys,time
 import json
+import math
 # import multiprocessing # multiprocessing on dealing with TF datasets
 
 def get_tf_file_data(tf_json):
@@ -42,44 +43,125 @@ def get_binding_count(binding_count_json):
     sys.stdout.write("Loading TR matrix file: {} seconds \n ".format(endtime-starttime))
     return bc_data
 
+#find estimation bins in the (left,right) interval
+def find_est_bin(left, right, bin_size):
+    if right//bin_size == left//bin_size:
+        bins_insert = [(left,right)]
+    else:
+        #number of est boundries
+        nbds=(right+1)//bin_size-(left-1)//bin_size
+        #list of boundries (left-closed, right-open)
+        bds=[left]
+        for j in range(0,nbds):
+            bds.append(((left-1)//bin_size+1+j)*bin_size)
+        bds.append(right+1)
+        #remove duplicated boundries if there are (could happen at left or right end)
+        bds=sorted(list(set(bds)))
+        #return bins to insert
+        bins_insert=[]
+        for j in range(0,len(bds)-1):
+            bins_insert.append((bds[j],bds[j+1]-1))
+    return(bins_insert)
+
+def cal_bin_auc(bin_list, baseA, matrix_data, positions):
+    start = bin_list[0]
+    end = bin_list[1]
+    y_addition = {}
+    baseB = {}
+    bin_auc = {}
+    #initiate dicts
+    for i in range(1, len(baseA)+1):
+        y_addition[i] = 0
+        bin_auc[i] = 0
+        baseB[i] = 0
+    #caculate addition on y-axis in the given bin for each TF
+    for i in range(start,end+1):
+        tf_occur = matrix_data[str(positions[i])].strip().split()
+        for j in {int(t) for t in tf_occur }:
+            y_addition[j] += 1
+    #caculate baseB and AUC
+    for i in range(1, len(baseA)+1):
+        baseB[i] = baseA[i] + y_addition[i]
+        bin_auc[i] = (baseA[i]+baseB[i])*(end-start+1-y_addition[i])/2
+    return((bin_auc,baseB))
+
+
 def cal_auc_for_all_tfs(args, positions, active_pos_count, tied_list, matrix_data, bc_data, tf_file_len):
     starttime0 = time.time()
     if args.subcommand_name == 'region':
         print('region mode - active positions:'+str(active_pos_count))
         active_positions = positions[0:active_pos_count]
-
+        
+        print("Determining bins for estimation...")
+        starttime = time.time()
         #0-initialize bin intervals for estimation
-        est_bin_count=20
-        est_bin_size=active_pos_count//est_bin_count
-        est_bin_list=[]
-        for i in range(0,est_bin_count):
-            est_bin_list.append((i*est_bin_size, (i+1)*est_bin_size-1))
-        if active_pos_count%est_bin_count!=0:
-            est_bin_list.append((est_bin_count*est_bin_size,active_pos_count-1))
+        est_bin_size=100
         
         #merge est bins and tied bins
-        #1) remove all tied bins contained by any est bin
+        #1) remove all tied bins fully contained by any est bin
         tied_list_f1=[]
-        est_bin_remove=[]
         for tb in tied_list:
             if tb[0]//est_bin_size != tb[1]//est_bin_size:
                 tied_list_f1.append(tb)
-                (tb[1]//est_bin_size)-(tb[0]//est_bin_size) = bound_crossed
-        print(tied_list_f1)
 
         #2) go through tied bins and estimate bins to merge them together
-        est_bin_list=sorted(est_bin_list)
-        tied_list_f1=sorted(tied_list_f1)
+        all_bins = []
 
-        Out_of_tied=TRUE
-        current_ptr=0
-        final_bin_list=[]
-        #when out of a tied bin
-        if Out_of_tied=TRUE:
-            if tied_list_f1[0][0] <= est_bin_list[0][0]
-                final_bin_list.append((current_ptr,tied_list_f1[0][0]-1))
-                current_ptr=tied_list_f1[0][0]
-                
+        if len(tied_list_f1) == 0:
+            all_bins = find_est_bin(0, len(positions)-1, est_bin_size)
+        else:
+            for i in range(0,(len(tied_list_f1)-1)):
+                if tied_list_f1[i][1]>=tied_list_f1[i+1][0]:
+                    sys.exit("interval division error")
+                elif tied_list_f1[i][1]+1==tied_list_f1[i+1][0]:
+                    #neighouring tied bins connect
+                    all_bins.append(tied_list_f1[i])
+                else:
+                    bins_insert = find_est_bin(tied_list_f1[i][1]+1, tied_list_f1[i+1][0]-1, est_bin_size)
+                    all_bins.append(tied_list_f1[i])
+                    all_bins = all_bins + bins_insert
+            all_bins.append(tied_list_f1[-1])
+            if tied_list_f1[0][0]!=0:
+                head_bins = find_est_bin(0, (tied_list_f1[0][0]-1), est_bin_size)
+                all_bins = head_bins + all_bins
+            if tied_list_f1[-1][1]!=len(positions)-1:
+                tail_bins = find_est_bin(tied_list_f1[-1][1], len(positions)-1, est_bin_size)
+                all_bins = all_bins + tail_bins
+
+        #check bin division
+        for i in range(0,(len(all_bins)-1)):
+            if all_bins[i][1]+1 != all_bins[i+1][0]:
+                sys.exit("interval division error")
+        if all_bins[0][0] != 0 or all_bins[-1][1] != len(positions)-1:
+            sys.exit("interval division error")
+
+        endtime = time.time()
+        sys.stdout.write("{} seconds \n".format(endtime-starttime))       
+        print("Divided all UDHS into "+str(len(all_bins))+" bins")
+
+        #area calculation
+        #calculate area units for each bin
+        baseA = {}
+        tf_auc_unit = {}
+        for i in range(1, tf_file_len+1):
+            tf_auc_unit[i] = 0
+            baseA[i] = 0
+
+        for i in range(0, len(all_bins)):
+            bin_area_res = cal_bin_auc(all_bins[i], baseA, matrix_data, positions)
+            for j in range(1, tf_file_len+1):
+                tf_auc_unit[j] += bin_area_res[0][j]
+                baseA[j] = bin_area_res[1][j]
+
+        #multiply area units with unit size
+        tf_auc = {}
+        for i in range(1, tf_file_len+1):
+            tf_auc[i] = tf_auc_unit[i]/(baseA[i]*(len(positions)-baseA[i]))
+
+        endtime0 = time.time()
+        sys.stdout.write("cal_auc_for_all_tfs takes {} seconds \n".format(endtime0-starttime0))
+
+        return(tf_auc)
 
 
         #step1: calculate the area units of active part

@@ -9,6 +9,10 @@ ADAPTIVE_LASSO_MAXSAMPLES = 20 # TODO: should we fix it?
 
 def bart(options):
     args = OptValidator.opt_validate(options)
+    if args.binsize is None:
+        var_exists = False
+    else:
+        var_exists = True
  
     # create output directory
     try:
@@ -81,7 +85,7 @@ def bart(options):
                 SimpleNamespace(samplefile=regression_info, \
                                 name=args.ofilename, \
                                 k27achdf5=args.rpkm)
-        EnhancerIdentifier.main(enhancer_args)
+        counting = EnhancerIdentifier.main(enhancer_args)
         sys.stdout.flush()
 
         enhancer_profile = args.ofilename + '_enhancer_prediction_lasso.txt'
@@ -90,8 +94,8 @@ def bart(options):
             sys.exit(1)
 
         # get ranked score UDHS positions from enhancer profile
-        positions = AUCcalc.get_position_list(enhancer_profile)
-        active_pos_count = len(positions)
+        # positions = AUCcalc.get_position_list(enhancer_profile)
+        positions = sorted(counting.keys(),key=counting.get,reverse=True)
 
     # bart profile [-h] <-i ChIP-seq profile> <-f format> <-s species> [-t target] [-p processes] [--outdir] [options]
     elif args.subcommand_name == 'profile':
@@ -100,7 +104,6 @@ def bart(options):
         counting = ReadCount.read_count_on_DHS(args)
         # get ranked score UDHS positions from read count
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
-        active_pos_count = sum(1 for i in list(counting.values()) if i > 0)
 
     elif args.subcommand_name == 'region':
         sys.stdout.write('Start mapping the bed score onto UDHS...\n')
@@ -109,24 +112,26 @@ def bart(options):
         sys.stdout.write('Sorting scored UDHS...\n')
         sys.stdout.flush()
         positions = sorted(counting.keys(),key=counting.get,reverse=True)
-        active_pos_count = sum(1 for i in list(counting.values()) if i > 0)
-        # find tied intervals
-        # tied_dict held 0-initialize start and end positions of tied intervals
-        tied_dict=dict()
-        interval_start=False
-        for i in range(0,(len(positions)-1)):
-            if interval_start==True:
-                if counting[positions[i]]==counting[positions[i+1]]:
-                    tied_dict[current_ptr]=i+1
-                else:
-                    interval_start=False
-            elif counting[positions[i]]==counting[positions[i+1]]:
-                interval_start=True
-                current_ptr=i
+        
+    # find tied intervals
+    # tied_dict held 0-initialize start and end positions of tied intervals
+    tied_dict=dict()
+    interval_start=False
+    for i in range(0,(len(positions)-1)):
+        if interval_start==True:
+            if counting[positions[i]]==counting[positions[i+1]]:
                 tied_dict[current_ptr]=i+1
-        tied_list=[]
-        for k in tied_dict.keys():
-            tied_list.append((k,tied_dict[k]))
+            else:
+                interval_start=False
+        elif counting[positions[i]]==counting[positions[i+1]]:
+            interval_start=True
+            current_ptr=i
+            tied_dict[current_ptr]=i+1
+    tied_list=[]
+    for k in tied_dict.keys():
+        tied_list.append((k,tied_dict[k]))
+
+    print(str(len(tied_list))+" tied intervals")
 
 
     '''
@@ -135,7 +140,7 @@ def bart(options):
     sys.stdout.write('BART Prediction starts...\n\nRank all DHS...\n')
     sys.stdout.flush()
 
-    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions, active_pos_count, tied_list)
+    tf_aucs, tf_index = AUCcalc.cal_auc(args, positions, tied_list)
     sys.stdout.flush()
 
     stat_file = args.ofilename + '_bart_results.txt'

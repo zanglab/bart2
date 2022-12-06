@@ -96,7 +96,6 @@ def opt_validate(options):
     # used for BART AUC calculation
     options.tffile = data_dir+os.sep+'bart2_'+options.species+'_TF_file.json'
     options.tfoverlap = data_dir+os.sep+'bart2_'+options.species+'_TF_overlap.json'
-    options.bc = data_dir+os.sep+'bart2_'+options.species+'_binding_count.json'
 
     return options
 

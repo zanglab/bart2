@@ -74,6 +74,10 @@ def add_norm_option(parser):
 def add_processes_option(parser):
     parser.add_argument('-p','--processes',dest='processes', action='store', type=int, metavar = '<processes>', default=1,
                         help = 'Number of CPUs BART will use.')
+
+def add_estimation_option(parser):
+    parser.add_argument('-bs','--binsize',dest='binsize', action='store', type=int,
+                        help = 'bin size for estimation')
     
 def add_geneset_parser( subparsers ):
     """
@@ -96,6 +100,7 @@ def add_geneset_parser( subparsers ):
     add_tf_option(group_input)
     # add_processes_option(group_input)
     add_norm_option(group_input)
+    add_estimation_option(group_input)
         
     # group for output files
     group_output = argparser_geneset.add_argument_group( "Output arguments" )
@@ -123,6 +128,7 @@ def add_profile_parser( subparsers ):
     add_tf_option(group_input)
     # add_processes_option(group_input)
     add_norm_option(group_input)
+    add_estimation_option(group_input)
     
     # group for output files
     group_output = argparser_profile.add_argument_group( "Output arguments" )
@@ -147,6 +153,7 @@ def add_region_parser( subparsers ):
     add_tf_option(group_input)
     # add_processes_option(group_input)
     add_norm_option(group_input)
+    add_estimation_option(group_input)
     
     # group for output files
     group_output = argparser_region.add_argument_group( "Output arguments" )

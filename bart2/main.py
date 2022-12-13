@@ -9,10 +9,6 @@ ADAPTIVE_LASSO_MAXSAMPLES = 20 # TODO: should we fix it?
 
 def bart(options):
     args = OptValidator.opt_validate(options)
-    if args.binsize is None:
-        var_exists = False
-    else:
-        var_exists = True
  
     # create output directory
     try:

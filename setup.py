@@ -26,7 +26,7 @@ def main():
         sys.stderr.write("CRITICAL: Python version must be higher than or equal to 3.0!\n")
         sys.exit(1)
         
-    setup(name="bart2-test",
+    setup(name="bart2",
           version=bart2.__version__,
           description="Binding Analysis for Regulatory Transcription Factors of Genes - Revised version",
           long_description=long_descr,
@@ -47,7 +47,7 @@ def main():
                                 'mm10_library/*.h5',
                                 'mm10_library/mm10_test_data/*'],},
           # include_package_data=True,
-          scripts=['bin/bart2-test',],
+          scripts=['bin/bart2',],
           classifiers=[
               'Development Status :: 4 - Beta',
               'Environment :: Console',

@@ -42,7 +42,7 @@ BART uses Python's distutils tools for source installation. Before installing BA
 - pandas
 - scipy
 - tables
-- sklearn
+- scikit-learn
 - matplotlib
 
 #### Download the source package and setup the configuration file

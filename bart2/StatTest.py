@@ -107,11 +107,7 @@ def stat_test(AUCs, tf_dict, statfile, normfile):
         stat.loc[i]['rank_avg_z_p_a'] = (stat.loc[i]['rank_zscore']+stat.loc[i]['rank_pvalue']+stat.loc[i]['rank_auc'])*0.33/len(tfs.keys())   # [7] for average of three
         stat.loc[i]['rank_avg_z_p_a_irwinhall_pvalue'] = irwin_hall_cdf(3*stat.loc[i]['rank_avg_z_p_a'],3)
 
-    with open(statfile,'w') as statout:
-        statout.write('TR\t{}\t{}\t{}\t{}\t{}\t{}\n'.format('statistic','pvalue','zscore','max_auc','re_rank','irwin_hall_pvalue'))
-        for i in sorted(stat.index,key=lambda x: stat.loc[x]['rank_avg_z_p_a'],reverse=False):
-            statout.write('{}\t{:.3f}\t{:.3e}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3e}\n'.format(i,stat.loc[i]['score'],stat.loc[i]['pvalue'],stat.loc[i]['zscore'],stat.loc[i]['max_auc'],stat.loc[i]['rank_avg_z_p_a'],stat.loc[i]['rank_avg_z_p_a_irwinhall_pvalue']))
-    sys.stdout.write('--Standardization finished!\n--Ranked TRs saved in file: {}\n'.format(statfile))
+    stat = stat.sort_values(by = 'rank_avg_z_p_a', axis = 0)
 
     # plot figures of user defined TFs
     # if args.target:
@@ -121,3 +117,5 @@ def stat_test(AUCs, tf_dict, statfile, normfile):
     #             stat_plot(stat,tfs,ID,args,'rank_avg_z_p_a')
 
     sys.stdout.write('Prediction done!\n')
+
+    return(stat)

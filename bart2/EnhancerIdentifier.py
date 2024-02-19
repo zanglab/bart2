@@ -2,6 +2,7 @@ import os,sys,argparse
 import tables
 import time,re
 import numpy as np
+import pandas as pd
 
 from bart2 import RPRegress
 
@@ -71,12 +72,14 @@ def main(args):
     for i,elem in enumerate(T):
         out_res.append((chrom[i].decode('utf-8'),start[i],end[i],str(i+1),elem))
     sorted_out_res = sorted(out_res, key=lambda x: float(x[4]),reverse=True)
+
+    sorted_out_res_df = pd.DataFrame(np.array(sorted_out_res), columns=['chromosom', 'start', 'end', 'UDHSID', 'Score'])
     
-    fpo = open(output_name+'_enhancer_prediction_lasso.txt','w')
-    print('%s\t%s\t%s\t%s\t%s' % ("chromosom",'start','end','UDHSID',"Score"), file=fpo)
+    counting = {}
     for line in sorted_out_res:
-        print('%s\t%d\t%d\t%s\t%3.2f' % (line[0],line[1],line[2],line[3],line[4]), file=fpo)
-    fpo.close()
+        counting[int(line[3])] = line[4]
+
+    return(counting, sorted_out_res_df)
 
 
 if __name__ == '__main__':

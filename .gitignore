@@ -35,3 +35,4 @@ mm10_library/
 #test files
 bart2/test.py
 bart2/bart.conf
+test_dir/

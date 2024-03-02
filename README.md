@@ -127,19 +127,17 @@ in either hg38 or mm10), predict TRs enriched in this genomic region set.
 
 **Usage**: 	`bart2 region -i ChIPpeak.bed -c 4 -s hg38 --outdir bart2_output`
 
+#### additional argument
+
+--binsize:	Size of bin used to estimate ROC AUC. Default is 1000 for geneset and profile mode, 50 for region mode. Setting it lower will guarantees a more precise calculation, with greater time cost.
+
 #### Output files
 
 1. **\*_adaptive_lass_Info.txt** 
-provides regression information tells which representative H3K27ac samples are selected along with coefficients through adaptive lasso regression and sample annotations including cell line, cell type or tissue type. 
-This is the output only generated in geneset mode.
-
-2. **\*_CRE_prediction_lasso.txt** 
-is the predicted cis-regulatory profile of the input gene set and is a ranked list of all CREs (UDHS) in the genome. The higher the score, the more likely the regulatory element regulates the input gene set.
-This is the output only generated in geneset mode.
-
+  provides regression information tells which representative H3K27ac samples are selected along with coefficients through adaptive lasso regression and sample annotations including cell line, cell type or tissue type. 
+  This is the output only generated in geneset mode.
 3. **\*_auc.txt** 
 provides the association score of each of the TR ChIP-seq dataset with the genome cis-regulatory profile.
-
 4. **\*_bart_results.txt** 
 is a rank of all TRs with multiple quantification scores.  
 

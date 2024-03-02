@@ -91,13 +91,13 @@ def bart(options):
                             name=args.ofilename,
                             k27achdf5=args.rpkm)
         counting, udhs_predict_df = EnhancerIdentifier.main(enhancer_args)
-        WriteFile.write_udhs_prediction(args, udhs_predict_df)
-        sys.stdout.flush()
+        # WriteFile.write_udhs_prediction(args, udhs_predict_df)
+        # sys.stdout.flush()
 
-        enhancer_profile = args.ofilename + '_enhancer_prediction_lasso.txt'
-        if not os.path.exists(enhancer_profile):
-            sys.stderr.write("Error: generating enhancer profile! \n")
-            sys.exit(1)
+        # enhancer_profile = args.ofilename + '_enhancer_prediction_lasso.txt'
+        # if not os.path.exists(enhancer_profile):
+        #     sys.stderr.write("Error: generating enhancer profile! \n")
+        #     sys.exit(1)
 
         # get ranked score UDHS positions from enhancer profile
         # positions = AUCcalc.get_position_list(enhancer_profile)

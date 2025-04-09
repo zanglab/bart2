@@ -60,7 +60,7 @@ To install a source distribution of BART, unpack the distribution tarball and go
 
 ```shell
 wget https://virginia.box.com/shared/static/jvwc097d7ca0oart6ka4ivonqi4qxkox.zip -O bart21.zip
-gunzip bart21.zip
+unzip bart21.zip
 cd bart2-master
 ```
 

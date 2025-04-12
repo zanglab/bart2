@@ -59,9 +59,9 @@ tar zxf mm10_library.tar.gz
 To install a source distribution of BART, unpack the distribution tarball and go to the directory where you unpacked BART.
 
 ```shell
-wget https://virginia.box.com/shared/static/031noe820hk888qzcxvw1cazol1gdhi0.gz -O bart_v2.0.tar.gz
-tar zxf bart_v2.0.tar.gz
-cd bart_v2.0
+wget https://virginia.box.com/shared/static/jvwc097d7ca0oart6ka4ivonqi4qxkox.zip -O bart21.zip
+unzip bart21.zip
+cd bart2-master
 ```
 
 Modify the configure file (bart2/bart.conf). For example, if you have the hg38_library (or mm10_library) downloaded in this directory: /abc/def/hg38_library (or /abc/def/mm10_library), then the bart.conf file should read:
